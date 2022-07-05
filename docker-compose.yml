@@ -1,0 +1,25 @@
+# docker-compose up
+version: "3.9"
+
+services:
+    lng-client:
+        image: ${CONTAINER_REGISTRY}/lng-client
+        build: 
+            context: ./modules/client
+        container_name: lng-client
+        ports:
+            - "${CLIENT_HOST_PORT}:${CLIENT_CONTAINER_PORT}"
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+    lng-backend:
+        image: ${CONTAINER_REGISTRY}/lng-backend
+        build: 
+            context: ./modules/backend
+        container_name: lng-backend
+        ports:
+            - "${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}"
+        depends_on:
+            - "socket-io-provider"
+            - "database-api"
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
